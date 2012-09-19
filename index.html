@@ -5,6 +5,7 @@
 <title>Hello World Application</title>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/appmobi.js"></script>
+    <script type="text/javascript" charset="utf-8" src="lib/caat/caat.js"></script>
     <link href="styles.css" rel="stylesheet" type="text/css">
     <style type="text/css">
         * {
@@ -28,6 +29,28 @@
 
     window.document.addEventListener('touchmove', preventDefaultScroll, false);
 
+    function setupCAAT() {
+      console.log("Creating director");
+      var director = new CAAT.Director().initialize(
+          320, 480, document.getElementById("thecanvas")
+      );
+
+      console.log("Creating scene");
+      var scene = director.createScene();
+
+      console.log("Creating circle");
+      var circle = new CAAT.ShapeActor().
+        setLocation(20, 20).
+        setSize(60, 60).
+        setFillStyle('#ff0000').
+        setStrokeStyle('#000000');
+
+      console.log("Adding circle to scene");
+      scene.addChild(circle);
+      console.log("Looping");
+      CAAT.loop(1);
+
+    }
     //*** Device Ready Code **********
     //This event handler is fired once the AppMobi libraries are ready
     //AppMobi is ready to roll
@@ -50,19 +73,21 @@
       document.getElementById('debugging').textContent = AppMobi.testingStuff;
       document.getElementById('contentstuff').innerHTML = 'Running test function...';
       AppMobi.testingStuff(5, 'testingStuffCallback');
+
+      setupCAAT();
     }
-    document.addEventListener("appMobi.device.ready",onDeviceReady,false);
+    if (typeof(AppMobi) === "undefined") {
+      document.addEventListener("appMobi.device.ready",onDeviceReady,false);
+    } else {
+      setupCAAT();
+    }
     </script>
 
 </head>
 
 
-<body onload="init();" style="background-image:url('images/tc_bg_phone.jpg'); background-repeat:no-repeat;">
+<body onload="init();">
 
-  <span id="headSPAN" style="text-align:center;color:#000;width:300px;left:10px;top:80px;position:absolute;">Hello World!</span>
-
-  <span style="position:absolute;text-align:center;width:300px;left:10px;top:180px;">Testing modifying SDK</span>
-  <span id="contentstuff" style="position:absolute;text-align:center;width:300px;left:10px;top:250px;">foobar</span>
-  <span id="debugging" style="position:absolute;text-align:center;width:300px;left:10px;top:300px;">foobar</span>
+  <canvas id="thecanvas"></canvas>
 
 </html>

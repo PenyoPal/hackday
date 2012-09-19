@@ -30,25 +30,54 @@
     window.document.addEventListener('touchmove', preventDefaultScroll, false);
 
     function setupCAAT() {
-      console.log("Creating director");
-      var director = new CAAT.Director().initialize(
-          320, 480, document.getElementById("thecanvas")
-      );
 
-      console.log("Creating scene");
-      var scene = director.createScene();
+      function __scene(director) {
+        var scene = director.createScene();
 
-      console.log("Creating circle");
-      var circle = new CAAT.ShapeActor().
-        setLocation(20, 20).
-        setSize(60, 60).
-        setFillStyle('#ff0000').
-        setStrokeStyle('#000000');
+        var bg= new CAAT.ActorContainer().
+          setBounds(0,0,director.width,director.height).
+          setFillStyle('#000000');
 
-      console.log("Adding circle to scene");
-      scene.addChild(circle);
-      console.log("Looping");
-      CAAT.loop(1);
+        scene.addChild(bg);
+
+        var char = new CAAT.Actor().
+          setBackgroundImage(director.getImage('char'), true).
+          setLocation(20, 20).
+          setSize(60, 60);
+
+        var circle = new CAAT.ShapeActor().
+          setLocation(20, 20).
+          setSize(60, 60).
+          setFillStyle('#ff0000').
+          setStrokeStyle('#000000');
+
+        bg.addChild(circle);
+        bg.addChild(char);
+
+      }
+
+      function __init() {
+
+        var director = new CAAT.Director().
+          initialize(320, 480, document.getElementById("thecanvas"));
+
+        new CAAT.ImagePreloader().loadImages(
+          [
+            {id:'char', url:'assets/persons/sf-blue-angry.png'}
+          ],
+          function( counter, images ) {
+            director.setImagesCache(images);
+            __scene(director);
+          }
+        );
+ 
+        CAAT.loop(60);
+      }
+
+      __init();
+
+
+   
 
     }
     //*** Device Ready Code **********

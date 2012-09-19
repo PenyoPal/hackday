@@ -62,7 +62,7 @@
       AppMobi.display.useViewport(320,480);
 
       //lock orientation
-      AppMobi.device.setRotateOrientation("portrait");
+      AppMobi.device.setRotateOrientation("landscape");
       AppMobi.device.setAutoRotate(false);
 
       //manage power
@@ -70,16 +70,16 @@
       AppMobi.device.hideSplashScreen();
 
       // Test function
-      document.getElementById('debugging').textContent = AppMobi.testingStuff;
-      document.getElementById('contentstuff').innerHTML = 'Running test function...';
-      AppMobi.testingStuff(5, 'testingStuffCallback');
+      //document.getElementById('debugging').textContent = AppMobi.testingStuff;
+      //document.getElementById('contentstuff').innerHTML = 'Running test function...';
+      //AppMobi.testingStuff(5, 'testingStuffCallback');
 
       setupCAAT();
     }
     if (typeof(AppMobi) === "undefined") {
-      document.addEventListener("appMobi.device.ready",onDeviceReady,false);
-    } else {
       setupCAAT();
+    } else {
+      document.addEventListener("appMobi.device.ready",onDeviceReady,false);
     }
     </script>
 

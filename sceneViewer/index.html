@@ -37,7 +37,7 @@
 
     var frames = [];
 
-    var Game = {}
+    var Game = {};
 
     Game.Character = function(director){
       var meta = {
@@ -117,21 +117,20 @@
                 setBackgroundImage(director.getImage('bk' + i), true).
                 setPosition(i * 1024 - (1024 * 13), 10);
 
-            var b = new CAAT.PathBehavior().
-                      setFrameTime(0, 50000).
-                      setPath(
-                      new CAAT.Path().setLinear(
-                              actor.x, actor.y,
-                              actor.x + 10000, actor.y));
+            var pathBehavior = new CAAT.PathBehavior().
+                                  setFrameTime(0, 50000).
+                                  setPath(
+                                    new CAAT.Path().setLinear(
+                                          actor.x, actor.y,
+                                          actor.x + 10000, actor.y)
+                                    );
 
-            actor.addBehavior(b);
+            actor.addBehavior(pathBehavior);
             frames.push(actor);
-        }
-    
-        for(var i = 0; i < frames.length; i++){
-          scene.addChild(frames[i]);
+            scene.addChild(frames[i]);
         }
       
+        // Make a bunch of random characters
         for(var i = 0; i < 10; i++){
           var character = new Game.Character();
           character.setLocation(i * 250, 0);

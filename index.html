@@ -76,11 +76,7 @@
 
       setupCAAT();
     }
-    if (typeof(AppMobi) === "undefined") {
-      setupCAAT();
-    } else {
-      document.addEventListener("appMobi.device.ready",onDeviceReady,false);
-    }
+    
     </script>
 
 </head>
@@ -89,5 +85,13 @@
 <body onload="init();">
 
   <canvas id="thecanvas"></canvas>
+
+  <script>
+  if (typeof(AppMobi) === "undefined") {
+      setupCAAT();
+    } else {
+      document.addEventListener("appMobi.device.ready",onDeviceReady,false);
+    }
+  </script>
 
 </html>

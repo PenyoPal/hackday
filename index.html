@@ -15,6 +15,11 @@
     </style>
 
     <script type="text/javascript" language="javascript">
+
+    Array.prototype.randomElement = function () {
+      return this[Math.floor(Math.random() * this.length)]
+    }
+
     //global variables
     //Initialization function
     function init() {}
@@ -29,7 +34,68 @@
 
     window.document.addEventListener('touchmove', preventDefaultScroll, false);
 
+    makeCharacter = function(director){
+      var height_choices = ["s","t"];
+      var weight_choices = ["s","f"];
+      var color_choices = ["blue","purple","red"];
+      var item_choices = ["glasses","hat","scarf"]; // TODO: null option
+      var mood_choices = ["angry","happy","sad"];
+
+      var c = {
+        height: height_choices.randomElement(),
+        weight: weight_choices.randomElement(),
+        color: color_choices.randomElement(),
+        item: item_choices.randomElement(),
+        mood: mood_choices.randomElement(),
+        images: {
+          face: new Image(),
+          body: new Image(),
+          item: new Image()
+        }
+      }
+
+      console.log(c.height+c.weight+c.color+c.mood)
+
+      var path = "assets/persons/";
+      var ext = ".png";
+
+      c.images.face.src = path + c.height + c.weight + "-" + c.color + "-" + c.mood + ext;
+      c.images.body.src = path + c.height + c.weight + "-" + c.color + ext;
+      c.images.item.src = path + c.height + c.weight + "-" + c.item + ext;
+
+      var cActor = new CAAT.ActorContainer().
+          setBounds(0,0,300,462).
+          setFillStyle('#123456')
+
+      setTimeout(function(){ // HACK: timeout so that images have a chance to load
+        var face = new CAAT.Actor().
+          setBackgroundImage(c.images.face, true).
+          setLocation(0, 0).
+          setSize(60, 60);
+
+        var body = new CAAT.Actor().
+          setBackgroundImage(c.images.body, true).
+          setLocation(0, 0).
+          setSize(60, 60);
+
+        var item = new CAAT.Actor().
+          setBackgroundImage(c.images.item, true).
+          setLocation(0, 0).
+          setSize(60, 60);
+
+        cActor.addChild(body);
+        cActor.addChild(face);
+        cActor.addChild(item);
+      }, 50);
+
+      cActor.data = c;
+
+      return cActor;
+    }
+
+
     function setupCAAT() {
+
 
       function __scene(director) {
         var scene = director.createScene();
@@ -40,37 +106,29 @@
 
         scene.addChild(bg);
 
-        var char = new CAAT.Actor().
-          setBackgroundImage(director.getImage('char'), true).
-          setLocation(20, 20).
-          setSize(60, 60);
+        var character = makeCharacter();
 
-        var circle = new CAAT.ShapeActor().
-          setLocation(20, 20).
-          setSize(60, 60).
-          setFillStyle('#ff0000').
-          setStrokeStyle('#000000');
-
-        bg.addChild(circle);
-        bg.addChild(char);
+        bg.addChild(character);
 
       }
 
       function __init() {
 
-        var director = new CAAT.Director().
+        director = new CAAT.Director().
           initialize(320, 480, document.getElementById("thecanvas"));
 
-        new CAAT.ImagePreloader().loadImages(
+        
+        /*new CAAT.ImagePreloader().loadImages(
           [
-            {id:'char', url:'assets/persons/sf-blue-angry.png'}
+            {id:'char2', url:'assets/persons/sf-blue.png'}
           ],
           function( counter, images ) {
             director.setImagesCache(images);
             __scene(director);
           }
-        );
- 
+        );*/
+
+        __scene(director);
         CAAT.loop(60);
       }
 

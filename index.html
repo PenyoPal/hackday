@@ -1,3 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-test
+
+<head>
+<title>Hello World Application</title>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/appmobi.js"></script>
+    <script type="text/javascript" charset="utf-8" src="lib/caat/caat.js"></script>
+    <link href="styles.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        * {
+           -webkit-user-select: none;  /* prevent copy paste for all elements */
+        }
+        body {  }
+    </style>
+
+    <script type="text/javascript" language="javascript">
+    //global variables
+    //Initialization function
+    function init() {}
+
+    //*** Prevent Default Scrolling ******
+    preventDefaultScroll = function(event) {
+        // Prevent scrolling on this element
+        event.preventDefault();
+        window.scroll(0,0);
+        return false;
+    };
+
+    window.document.addEventListener('touchmove', preventDefaultScroll, false);
+
+    function setupCAAT() {
+      console.log("Creating director");
+      var director = new CAAT.Director().initialize(
+          320, 480, document.getElementById("thecanvas")
+      );
+
+      console.log("Creating scene");
+      var scene = director.createScene();
+
+      console.log("Creating circle");
+      var circle = new CAAT.ShapeActor().
+        setLocation(20, 20).
+        setSize(60, 60).
+        setFillStyle('#ff0000').
+        setStrokeStyle('#000000');
+
+      console.log("Adding circle to scene");
+      scene.addChild(circle);
+      console.log("Looping");
+      CAAT.loop(1);
+
+    }
+    //*** Device Ready Code **********
+    //This event handler is fired once the AppMobi libraries are ready
+    //AppMobi is ready to roll
+    function testingStuffCallback(res) {
+      document.getElementById('contentstuff').innerHTML = 'gamma(5) = ' + res;
+    }
+    function onDeviceReady() {
+      //use AppMobi viewport
+      AppMobi.display.useViewport(320,480);
+
+      //lock orientation
+      AppMobi.device.setRotateOrientation("portrait");
+      AppMobi.device.setAutoRotate(false);
+
+      //manage power
+      AppMobi.device.managePower(true,false);
+      AppMobi.device.hideSplashScreen();
+
+      // Test function
+      document.getElementById('debugging').textContent = AppMobi.testingStuff;
+      document.getElementById('contentstuff').innerHTML = 'Running test function...';
+      AppMobi.testingStuff(5, 'testingStuffCallback');
+
+      setupCAAT();
+    }
+    if (typeof(AppMobi) === "undefined") {
+      document.addEventListener("appMobi.device.ready",onDeviceReady,false);
+    } else {
+      setupCAAT();
+    }
+    </script>
+
+</head>
+
+
+<body onload="init();">
+
+  <canvas id="thecanvas"></canvas>
+
 </html>

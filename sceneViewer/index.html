@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+<title>Hello World Application</title>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/appmobi.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../lib/caat/caat.js"></script>
+    <link href="styles.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        * {
+           -webkit-user-select: none;  /* prevent copy paste for all elements */
+        }
+        body {  }
+    </style>
+
+    <script type="text/javascript" language="javascript">
+    //global variables
+    //Initialization function
+    function init() {}
+
+    //*** Prevent Default Scrolling ******
+    preventDefaultScroll = function(event) {
+        // Prevent scrolling on this element
+        event.preventDefault();
+        window.scroll(0,0);
+        return false;
+    };
+
+    window.document.addEventListener('touchmove', preventDefaultScroll, false);
+
+    function setupCAAT() {
+
+      function __scene(director) {
+        var scene = director.createScene();
+
+        var bg= new CAAT.ActorContainer().
+          setBounds(0,0,director.width,director.height).
+          setFillStyle('#000000');
+
+        var bkDecal = new CAAT.Actor().
+          setBackgroundImage(director.getImage('bk'), true);
+
+        scene.addChild(bg);
+
+        var char = new CAAT.Actor().
+          setBackgroundImage(director.getImage('char'), true).
+          setLocation(20, 20).
+          setSize(60, 60);
+
+        var circle = new CAAT.ShapeActor().
+          setLocation(20, 20).
+          setSize(60, 60).
+          setFillStyle('#ff0000').
+          setStrokeStyle('#000000');
+
+        bg.addChild(circle);
+        
+        bg.addChild(bkDecal);
+        bg.addChild(char);
+      }
+
+      function __init() {
+
+        var director = new CAAT.Director().
+          initialize(1024, 640, document.getElementById("thecanvas"));
+
+        new CAAT.ImagePreloader().loadImages(
+          [
+            {id:'char', url:'../assets/persons/sf-blue-angry.png'},
+            {id:'bk',   url:'../assets/scene_bg/PP_bg_01.png'}
+          ],
+          function( counter, images ) {
+            director.setImagesCache(images);
+            __scene(director);
+          }
+        );
+ 
+        CAAT.loop(60);
+      }
+
+      __init();
+
+
+   
+
+    }
+    //*** Device Ready Code **********
+    //This event handler is fired once the AppMobi libraries are ready
+    //AppMobi is ready to roll
+    function testingStuffCallback(res) {
+      document.getElementById('contentstuff').innerHTML = 'gamma(5) = ' + res;
+    }
+    function onDeviceReady() {
+      //use AppMobi viewport
+      AppMobi.display.useViewport(320,480);
+
+      //lock orientation
+      AppMobi.device.setRotateOrientation("landscape");
+      AppMobi.device.setAutoRotate(false);
+
+      //manage power
+      AppMobi.device.managePower(true,false);
+      AppMobi.device.hideSplashScreen();
+
+      // Test function
+      //document.getElementById('debugging').textContent = AppMobi.testingStuff;
+      //document.getElementById('contentstuff').innerHTML = 'Running test function...';
+      //AppMobi.testingStuff(5, 'testingStuffCallback');
+
+      setupCAAT();
+    }
+    
+    </script>
+
+</head>
+
+
+<body onload="init();">
+
+  <canvas id="thecanvas"></canvas>
+
+  <script>
+  if (typeof(AppMobi) === "undefined") {
+      setupCAAT();
+    } else {
+      document.addEventListener("appMobi.device.ready",onDeviceReady,false);
+    }
+  </script>
+
+</html>
